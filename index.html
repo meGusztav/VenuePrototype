@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Venue Reservations Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">◎</div>
+            <div>
+                <div class="title">Reservations</div>
+                <div class="subtitle">Prototype (GitHub Pages)</div>
+            </div>
+        </div>
+
+        <nav class="tabs" role="tablist" aria-label="Views">
+            <button class="tab active" data-view="public" role="tab" aria-selected="true">Public Inquiry</button>
+            <button class="tab" data-view="admin" role="tab" aria-selected="false">Admin Dashboard</button>
+            <button class="tab" data-view="settings" role="tab" aria-selected="false">Settings</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- PUBLIC VIEW -->
+        <section id="view-public" class="view active">
+            <div class="grid two">
+                <div class="card">
+                    <div class="card-h">
+                        <h2>Inquiry form</h2>
+                        <p class="muted">For venues that want to stay “not online” — this is a shareable link that
+                            captures structured inquiries.</p>
+                    </div>
+
+                    <form id="inquiryForm" class="form">
+                        <div class="row two">
+                            <label>
+                                Event type
+                                <select name="eventType" required>
+                                    <option value="">Select…</option>
+                                    <option>Wedding</option>
+                                    <option>Debut</option>
+                                    <option>Birthday</option>
+                                    <option>Corporate</option>
+                                    <option>Other</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Expected guests (pax)
+                                <input name="pax" type="number" min="1" placeholder="50" required />
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <label>
+                                Date range (what the client asks for)
+                                <div class="row two">
+                                    <input name="startDate" type="date" required />
+                                    <input name="endDate" type="date" required />
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="row two">
+                            <label>
+                                Name
+                                <input name="clientName" placeholder="Juan Dela Cruz" required />
+                            </label>
+
+                            <label>
+                                Contact method
+                                <select name="contactMethod" required>
+                                    <option value="">Select…</option>
+                                    <option>Messenger</option>
+                                    <option>Viber</option>
+                                    <option>WhatsApp</option>
+                                    <option>Email</option>
+                                    <option>Phone</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <label>
+                                Contact details
+                                <input name="contactDetails" placeholder="Email or number/handle" required />
+                            </label>
+                        </div>
+
+                        <div class="row">
+                            <label>
+                                Notes (optional)
+                                <textarea name="notes" rows="4"
+                                    placeholder="Package preferences, special requests…"></textarea>
+                            </label>
+                        </div>
+
+                        <div class="row actions">
+                            <button type="submit" class="btn primary">Submit inquiry</button>
+                            <button type="button" id="seedDemo" class="btn">Load demo data</button>
+                        </div>
+
+                        <p class="small muted">
+                            This prototype stores data in your browser (localStorage). For a real product, you’d add
+                            authentication + database.
+                        </p>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-h">
+                        <h2>What happens next</h2>
+                        <ol class="steps">
+                            <li>Inquiry lands in Admin “Inbox”.</li>
+                            <li>Admin proposes dates and can create a <b>Pencil Booking</b> (3-day hold).</li>
+                            <li>Payment status tracked (deposit / partial / paid).</li>
+                            <li>Once paid, booking becomes <b>Confirmed</b> and blocks the calendar.</li>
+                        </ol>
+
+                        <div class="callout">
+                            <div class="callout-title">Anonymous-friendly</div>
+                            <div class="muted">You can share the inquiry link publicly without exposing your internal
+                                calendar.</div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <h3>Quick view</h3>
+                        <p class="muted">Admin overview is in the Admin Dashboard tab.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN VIEW -->
+        <section id="view-admin" class="view">
+            <div class="grid two">
+                <div class="card">
+                    <div class="card-h">
+                        <h2>Inbox</h2>
+                        <p class="muted">New inquiries and follow-ups.</p>
+                    </div>
+
+                    <div class="toolbar">
+                        <input id="search" class="input" placeholder="Search name / contact / notes…" />
+                        <select id="filterStatus" class="input">
+                            <option value="all">All statuses</option>
+                            <option value="inquiry">Inquiry</option>
+                            <option value="pencil">Pencil Hold</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div id="inboxList" class="list"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-h">
+                        <h2>Details</h2>
+                        <p class="muted">Select an inquiry to manage it.</p>
+                    </div>
+
+                    <div id="detailPane" class="empty">
+                        <div class="muted">No inquiry selected.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid one">
+                <div class="card">
+                    <div class="card-h">
+                        <h2>Calendar (internal)</h2>
+                        <p class="muted">A simple month view showing holds and confirmed bookings.</p>
+                    </div>
+
+                    <div class="calendar-h">
+                        <button id="calPrev" class="btn">←</button>
+                        <div id="calTitle" class="cal-title"></div>
+                        <button id="calNext" class="btn">→</button>
+                    </div>
+
+                    <div id="calendar" class="calendar"></div>
+
+                    <p class="small muted">
+                        This is intentionally simple: enough to validate the workflow before building a real calendar
+                        sync.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS VIEW -->
+        <section id="view-settings" class="view">
+            <div class="grid two">
+                <div class="card">
+                    <div class="card-h">
+                        <h2>Venue settings</h2>
+                        <p class="muted">Customize the prototype for your target venue.</p>
+                    </div>
+
+                    <form id="settingsForm" class="form">
+                        <div class="row">
+                            <label>
+                                Venue name
+                                <input name="venueName" placeholder="Manila Pavilion" />
+                            </label>
+                        </div>
+
+                        <div class="row two">
+                            <label>
+                                Default pencil hold (days)
+                                <input name="holdDays" type="number" min="1" max="30" value="3" />
+                            </label>
+
+                            <label>
+                                Currency label
+                                <input name="currency" placeholder="PHP" value="PHP" />
+                            </label>
+                        </div>
+
+                        <div class="row actions">
+                            <button class="btn primary" type="submit">Save settings</button>
+                            <button class="btn danger" type="button" id="resetAll">Reset all data</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-h">
+                        <h2>How to use this prototype</h2>
+                        <ul class="bullets">
+                            <li>Share the <b>Public Inquiry</b> page link to collect structured leads.</li>
+                            <li>Use <b>Admin Dashboard</b> as your internal system (like your Sheet + messages).</li>
+                            <li>Convert inquiries to <b>Pencil Hold</b> to prevent double-booking.</li>
+                            <li>Mark <b>Confirmed</b> once paid.</li>
+                        </ul>
+
+                        <div class="callout">
+                            <div class="callout-title">Next step</div>
+                            <div class="muted">If you want, we can add a lightweight “client view” that shows only
+                                proposed dates + payment instructions (no calendar).</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="muted">Prototype only — built for validating workflow quickly.</div>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
