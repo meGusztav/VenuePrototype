@@ -348,6 +348,18 @@ textarea {
     margin-top: 10px;
 }
 
+select {
+    color: white;
+    background-color: #111;
+}
+
+option {
+    color: #111;
+    /* Dark text */
+    background-color: #fff;
+    /* White background */
+}
+
 /* =========================
    Add-ons for Finder / Compare / Shortlist
    ========================= */
