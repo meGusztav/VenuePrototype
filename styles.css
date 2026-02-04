@@ -190,6 +190,13 @@ textarea {
     background: rgba(255, 255, 255, .04);
     color: var(--text);
     outline: none;
+
+    option {
+            color: #111;
+            /* Dark text */
+            background-color: #fff;
+            /* White background */
+        }
 }
 
 textarea {
@@ -399,13 +406,6 @@ textarea {
 select {
     color: white;
     background-color: #111;
-}
-
-option {
-    color: #111;
-    /* Dark text */
-    background-color: #fff;
-    /* White background */
 }
 
 .chip.pencil {
