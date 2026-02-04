@@ -396,6 +396,18 @@ textarea {
     white-space: nowrap;
 }
 
+select {
+    color: white;
+    background-color: #111;
+}
+
+option {
+    color: #111;
+    /* Dark text */
+    background-color: #fff;
+    /* White background */
+}
+
 .chip.pencil {
     color: var(--text);
     border-color: rgba(255, 255, 255, .25);
