@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Find a Venue — Prototype</title>
+    <link rel="stylesheet" href="venues.css" />
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">◎</div>
+            <div>
+                <div class="title">Find a Venue</div>
+                <div class="subtitle">Customer prototype (GitHub Pages)</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <a class="navlink" href="index.html">Admin / Inquiry Prototype</a>
+            <button id="geoBtn" class="btn">Use my location</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="grid">
+            <aside class="card filters">
+                <div class="card-h">
+                    <h2>Filters</h2>
+                    <p class="muted">Search venues by pax, distance, reviews, and more.</p>
+                </div>
+
+                <div class="card-b">
+                    <div class="row">
+                        <label>
+                            Location (area/city keyword)
+                            <input id="qLocation" placeholder="e.g., Makati, BGC, QC" />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Pax (min)
+                            <input id="paxMin" type="number" min="1" placeholder="50" />
+                        </label>
+                        <label>
+                            Pax (max)
+                            <input id="paxMax" type="number" min="1" placeholder="120" />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Budget (min)
+                            <input id="priceMin" type="number" min="0" placeholder="30000" />
+                        </label>
+                        <label>
+                            Budget (max)
+                            <input id="priceMax" type="number" min="0" placeholder="120000" />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Rating (min)
+                            <select id="ratingMin">
+                                <option value="0">Any</option>
+                                <option value="3.5">3.5+</option>
+                                <option value="4.0">4.0+</option>
+                                <option value="4.3">4.3+</option>
+                                <option value="4.6">4.6+</option>
+                            </select>
+                        </label>
+                        <label>
+                            Reviews (min)
+                            <input id="reviewsMin" type="number" min="0" placeholder="20" />
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <label>
+                            Event type
+                            <select id="eventType">
+                                <option value="">Any</option>
+                                <option>Wedding</option>
+                                <option>Debut</option>
+                                <option>Birthday</option>
+                                <option>Corporate</option>
+                                <option>Other</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="muted small">Amenities</div>
+                        <div id="amenitiesWrap" class="chips"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="muted small">Availability (optional)</div>
+                        <div class="row two">
+                            <label>
+                                Start date
+                                <input id="dateStart" type="date" />
+                            </label>
+                            <label>
+                                End date
+                                <input id="dateEnd" type="date" />
+                            </label>
+                        </div>
+                        <div class="small muted">
+                            Demo uses each venue’s “unavailable dates” list. Real product would use live calendar rules.
+                        </div>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Sort by
+                            <select id="sortBy">
+                                <option value="best">Best match</option>
+                                <option value="distance">Distance</option>
+                                <option value="rating">Rating</option>
+                                <option value="price_low">Price (low→high)</option>
+                                <option value="price_high">Price (high→low)</option>
+                            </select>
+                        </label>
+
+                        <label>
+                            Distance cap (km)
+                            <input id="maxKm" type="number" min="1" placeholder="10" />
+                        </label>
+                    </div>
+
+                    <div class="row actions">
+                        <button id="clearBtn" class="btn">Clear</button>
+                        <button id="seedBtn" class="btn primary">Load demo venues</button>
+                    </div>
+
+                    <div class="callout">
+                        <div class="callout-title">Proximity needs permission</div>
+                        <div class="muted small">Click “Use my location” to sort/filter by distance.</div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="card results">
+                <div class="card-h">
+                    <h2>Results</h2>
+                    <div class="subrow">
+                        <div id="resultMeta" class="muted">—</div>
+                        <div class="pill" id="geoStatus">Location: not set</div>
+                    </div>
+                </div>
+
+                <div id="resultsList" class="list"></div>
+            </section>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="modalBackdrop" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-h">
+                <div>
+                    <div id="mTitle" class="modal-title">Venue</div>
+                    <div id="mSubtitle" class="muted small">—</div>
+                </div>
+                <button id="mClose" class="btn">✕</button>
+            </div>
+
+            <div class="modal-b">
+                <div class="kv">
+                    <div class="k">Capacity</div>
+                    <div class="v" id="mPax">—</div>
+                </div>
+                <div class="kv">
+                    <div class="k">Price</div>
+                    <div class="v" id="mPrice">—</div>
+                </div>
+                <div class="kv">
+                    <div class="k">Rating</div>
+                    <div class="v" id="mRating">—</div>
+                </div>
+                <div class="kv">
+                    <div class="k">Area</div>
+                    <div class="v" id="mArea">—</div>
+                </div>
+                <div class="kv">
+                    <div class="k">Events</div>
+                    <div class="v" id="mEvents">—</div>
+                </div>
+                <div class="kv">
+                    <div class="k">Amenities</div>
+                    <div class="v" id="mAmen">—</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>Send inquiry</h3>
+                <p class="muted small">This writes into the same localStorage inbox as your Admin Dashboard prototype.
+                </p>
+
+                <form id="inqForm" class="form">
+                    <div class="row two">
+                        <label>Name <input name="clientName" required placeholder="Your name" /></label>
+                        <label>Pax <input name="pax" type="number" min="1" required placeholder="60" /></label>
+                    </div>
+                    <div class="row two">
+                        <label>Start date <input name="startDate" type="date" required /></label>
+                        <label>End date <input name="endDate" type="date" required /></label>
+                    </div>
+                    <div class="row two">
+                        <label>Contact method
+                            <select name="contactMethod" required>
+                                <option value="">Select…</option>
+                                <option>Messenger</option>
+                                <option>Viber</option>
+                                <option>WhatsApp</option>
+                                <option>Email</option>
+                                <option>Phone</option>
+                            </select>
+                        </label>
+                        <label>Contact details <input name="contactDetails" required
+                                placeholder="Email/number/handle" /></label>
+                    </div>
+                    <div class="row">
+                        <label>Notes <textarea name="notes" rows="3"
+                                placeholder="Package needs, time, special requests…"></textarea></label>
+                    </div>
+                    <div class="row actions">
+                        <button class="btn primary" type="submit">Send inquiry</button>
+                        <button class="btn" type="button" id="goAdmin">Open admin inbox</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="venues.js"></script>
+</body>
+
+</html>
