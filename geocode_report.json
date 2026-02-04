@@ -1,0 +1,41 @@
+{
+  "total": 50,
+  "notFound": [
+    {
+      "name": "Diamond Hotel Philippines - Grand Ballroom",
+      "status": "NOT FOUND",
+      "queries": {
+        "fullQ": "Diamond Hotel Philippines - Grand Ballroom, Roxas Blvd, Malate, Manila, Manila, Metro Manila, Philippines",
+        "parentQ": "Diamond Hotel Philippines, Roxas Blvd, Malate, Manila, Manila, Metro Manila, Philippines",
+        "parentAreaQ": "Diamond Hotel Philippines, Manila, Metro Manila, Philippines"
+      }
+    },
+    {
+      "name": "New World Makati Hotel - Ballroom",
+      "status": "NOT FOUND",
+      "queries": {
+        "fullQ": "New World Makati Hotel - Ballroom, Esperanza St, Makati, Makati, Metro Manila, Philippines",
+        "parentQ": "New World Makati Hotel, Esperanza St, Makati, Makati, Metro Manila, Philippines",
+        "parentAreaQ": "New World Makati Hotel, Makati, Metro Manila, Philippines"
+      }
+    },
+    {
+      "name": "Copacabana Apartment Hotel - Events",
+      "status": "NOT FOUND",
+      "queries": {
+        "fullQ": "Copacabana Apartment Hotel - Events, Legazpi Village, Makati, Makati, Metro Manila, Philippines",
+        "parentQ": "Copacabana Apartment Hotel, Legazpi Village, Makati, Makati, Metro Manila, Philippines",
+        "parentAreaQ": "Copacabana Apartment Hotel, Makati, Metro Manila, Philippines"
+      }
+    },
+    {
+      "name": "The Bellagio Square",
+      "status": "NOT FOUND",
+      "queries": {
+        "fullQ": "The Bellagio Square, Forbes Town area, Makati, Metro Manila, Philippines",
+        "parentQ": "The Bellagio Square, Forbes Town area, Makati, Metro Manila, Philippines",
+        "parentAreaQ": "The Bellagio Square, Makati, Metro Manila, Philippines"
+      }
+    }
+  ]
+}

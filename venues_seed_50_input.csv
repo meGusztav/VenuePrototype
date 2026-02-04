@@ -1,0 +1,53 @@
+name,area,address,lat,lon,pax_min,pax_max,price_from,price_to,currency,rating,review_count,is_claimed,availability_source
+The Manila Hotel - Fiesta Pavilion,Manila,"Ermita, Manila (Manila Hotel)",,,200,1000,,,PHP,4.6,1200,false,none
+The Manila Hotel - Centennial Hall,Manila,"Ermita, Manila (Manila Hotel)",,,150,550,,,PHP,4.6,1200,false,none
+Manila Prince Hotel - Grand Ballroom,Manila,"Ermita, Manila",,,150,600,,,PHP,4.2,600,false,none
+Diamond Hotel Philippines - Grand Ballroom,Manila,"Roxas Blvd, Malate, Manila",,,150,800,,,PHP,4.6,1600,false,none
+New Coast Hotel Manila - Grand Ballroom,Manila,"Malate, Manila",,,150,900,,,PHP,4.3,900,false,none
+Sheraton Manila Bay - Grand Ballroom,Manila,"M. Adriatico St, Malate, Manila",,,120,700,,,PHP,4.5,1500,false,none
+Rizal Park Hotel - Ballroom,Manila,"T.M. Kalaw Ave, Ermita, Manila",,,100,500,,,PHP,4.2,700,false,none
+Admiral Hotel Manila - Grand Harbour Ballroom,Manila,"Roxas Blvd, Ermita, Manila",,,60,180,,,PHP,4.4,450,false,none
+The Bayleaf Intramuros - Ballroom,Manila,"Intramuros, Manila",,,80,350,,,PHP,4.4,1100,false,none
+Century Park Hotel - Grand Ballroom,Manila,"Pablo Ocampo Sr Ext, Malate, Manila",,,150,1200,,,PHP,4.3,900,false,none
+Manila Marriott Hotel - Grand Ballroom,Manila,"Newport City, Pasay (near Manila)",,,200,1500,,,PHP,4.7,4500,false,none
+Hilton Manila - Ballroom,Manila,"Newport City, Pasay (near Manila)",,,150,900,,,PHP,4.6,2500,false,none
+Okada Manila - Grand Ballroom,Manila,"Entertainment City, Parañaque (near Manila)",,,200,1500,,,PHP,4.7,8000,false,none
+SMX Convention Center Manila,Manila,"MOA Complex, Pasay (near Manila)",,,500,10000,,,PHP,4.5,3000,false,none
+World Trade Center Metro Manila,Manila,"Pasay (near Manila)",,,800,13000,,,PHP,4.4,2000,false,none
+Philippine International Convention Center - Plenary Hall,Manila,"CCP Complex, Pasay (near Manila)",,,800,3500,,,PHP,4.6,2500,false,none
+SM Mall of Asia Arena,Manila,"MOA Complex, Pasay (near Manila)",,,2000,15000,,,PHP,4.6,20000,false,none
+Newport Performing Arts Theater,Manila,"Newport City, Pasay (near Manila)",,,800,1500,,,PHP,4.5,1500,false,none
+Cuneta Astrodome,Manila,"Pasay (near Manila)",,,1500,8000,,,PHP,4.1,1200,false,none
+Cultural Center of the Philippines - Main Theater,Manila,"CCP Complex, Pasay (near Manila)",,,800,1800,,,PHP,4.7,2000,false,none
+
+Makati Shangri-La - Grand Ballroom,Makati,"Ayala Ave, Makati",,,200,1200,,,PHP,4.6,6000,false,none
+The Peninsula Manila - Rigodon Ballroom,Makati,"Ayala Ave, Makati",,,200,900,,,PHP,4.7,4500,false,none
+Dusit Thani Manila - Grand Ballroom,Makati,"Ayala Center, Makati",,,200,1200,,,PHP,4.5,5500,false,none
+New World Makati Hotel - Ballroom,Makati,"Esperanza St, Makati",,,150,900,,,PHP,4.5,6500,false,none
+Fairmont Makati - Ballroom,Makati,"Makati Ave, Makati",,,150,700,,,PHP,4.6,4000,false,none
+Raffles Makati - Ballroom,Makati,"Makati Ave, Makati",,,80,350,,,PHP,4.7,2000,false,none
+Discovery Primea - Grand Ballroom,Makati,"Ayala Ave, Makati",,,120,500,,,PHP,4.6,2500,false,none
+City Garden GRAND Hotel - Ballroom,Makati,"Kalayaan Ave, Makati",,,120,500,,,PHP,4.4,3200,false,none
+Holiday Inn & Suites Makati - Ballroom,Makati,"Glorietta Mall area, Makati",,,120,600,,,PHP,4.5,5500,false,none
+Makati Diamond Residences - Function Rooms,Makati,"Legazpi Village, Makati",,,60,250,,,PHP,4.6,1800,false,none
+The Alpha Suites - Events Space,Makati,"Makati (Chino Roces area)",,,150,800,,,PHP,4.4,1200,false,none
+Valero Grand Suites - Function Space,Makati,"Valero St, Makati",,,40,150,,,PHP,4.3,700,false,none
+Copacabana Apartment Hotel - Events,Makati,"Legazpi Village, Makati",,,40,150,,,PHP,4.2,500,false,none
+Makati Sports Club - Function Halls,Makati,"L.P. Leviste St, Makati",,,100,600,,,PHP,4.4,600,false,none
+Ayala Museum - Events,Makati,"Greenbelt, Makati",,,80,250,,,PHP,4.6,3000,false,none
+The Astbury - Function Space,Makati,"Poblacion, Makati",,,40,150,,,PHP,4.2,500,false,none
+I’M Hotel - Events,Makati,"Poblacion, Makati",,,80,300,,,PHP,4.4,2200,false,none
+Gramercy Residences - Events,Makati,"Poblacion, Makati",,,80,250,,,PHP,4.3,2000,false,none
+The Bellagio Square (events),Makati,"Forbes Town area (near Makati)",,,80,300,,,PHP,4.3,800,false,none
+PBCOM Tower (events floors),Makati,"Ayala Ave, Makati",,,150,700,,,PHP,4.3,900,false,none
+
+The Filinvest Tent,Alabang,"Filinvest City, Alabang, Muntinlupa",,,300,2000,,,PHP,4.4,900,false,none
+Crimson Hotel Filinvest City Manila - Ballroom,Alabang,"Filinvest City, Alabang, Muntinlupa",,,150,800,,,PHP,4.5,4500,false,none
+The Bellevue Manila - Ballroom,Alabang,"Alabang, Muntinlupa",,,150,800,,,PHP,4.5,5500,false,none
+Acacia Hotel Manila - Grand Ballroom,Alabang,"Alabang, Muntinlupa",,,150,700,,,PHP,4.5,3000,false,none
+Vivere Hotel - Grand Ballroom,Alabang,"Alabang, Muntinlupa",,,120,500,,,PHP,4.4,2800,false,none
+Somerset Alabang Manila - Function Rooms,Alabang,"Alabang, Muntinlupa",,,60,250,,,PHP,4.5,1800,false,none
+Azumi Boutique Hotel - Events,Alabang,"Alabang, Muntinlupa",,,60,250,,,PHP,4.5,1500,false,none
+Parque España Residence Hotel - Events,Alabang,"Alabang, Muntinlupa",,,80,350,,,PHP,4.3,1400,false,none
+Alabang Country Club - Events,Alabang,"Alabang, Muntinlupa",,,150,800,,,PHP,4.4,900,false,none
+The Palms Country Club - Events,Alabang,"Alabang, Muntinlupa",,,120,600,,,PHP,4.4,900,false,none
