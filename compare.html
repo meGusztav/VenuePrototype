@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Compare Venues</title>
+    <link rel="stylesheet" href="venues.css" />
+    <style>
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">◎</div>
+            <div>
+                <div class="title">Compare venues</div>
+                <div class="subtitle">Side-by-side comparison</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <a class="navlink" href="find.html">Back to Finder</a>
+            <a class="navlink" href="shortlist.html">Shortlist (needs token)</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <div class="card-h">
+                <h2>Comparison</h2>
+                <div id="compareMeta" class="muted">Loading…</div>
+            </div>
+            <div class="card-b">
+                <div id="compareRoot"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="customer-config.js"></script>
+    <script src="customer-utils.js"></script>
+    <script src="customer-supabase.js"></script>
+    <script src="customer-state.js"></script>
+    <script src="customer-ui.js"></script>
+    <script src="customer-pages.js"></script>
+
+    <script src="compare.js"></script>
+</body>
+
+</html>

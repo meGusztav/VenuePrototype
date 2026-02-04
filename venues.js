@@ -1,6 +1,10 @@
 // Shares inbox storage with your admin prototype (index.html/app.js)
 const INBOX_KEY = "resProto:data:v1";
 const VENUES_KEY = "resProto:venues:v1";
+const SUPABASE_URL = "https://zyxxvgdgglpbluuiacps.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_hdzZLLQp19vAcmfDdFyzAA_b9pxwMFy";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 
 function uid() {
   return Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);

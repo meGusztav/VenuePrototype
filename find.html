@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Find a Venue</title>
+    <link rel="stylesheet" href="venues.css" />
+    <style>
+        /* Minimal additions (you can move into venues.css) */
+        .sticky {
+            position: sticky;
+            bottom: 0;
+            border-top: 1px solid var(--border);
+            background: rgba(11, 12, 16, .85);
+            backdrop-filter: blur(10px);
+            padding: 10px 12px;
+            z-index: 8;
+        }
+
+        .sticky-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sticky-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .14);
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .dot.on {
+            background: rgba(255, 255, 255, .55);
+        }
+
+        .stepper-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        .stepper-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stepper-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .anchor {
+            height: 1px;
+        }
+
+        .modal-backdrop.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">◎</div>
+            <div>
+                <div class="title">Find a Venue</div>
+                <div class="subtitle">Customer prototype • Guided search • Compare • Shortlist</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <a class="navlink" href="index.html">Admin Prototype</a>
+            <button id="geoBtn" class="btn">Use my location</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="grid">
+            <!-- LEFT: Guided + Filters -->
+            <aside class="card filters">
+                <div class="card-h">
+                    <h2>Guided search</h2>
+                    <p class="muted">Answer a few questions, then browse matches.</p>
+
+                    <div class="stepper-bar">
+                        <div class="stepper-left">
+                            <div id="stepLabel" class="muted">Step 1/5 — Event type</div>
+                            <div id="stepDots"></div>
+                        </div>
+                        <div class="stepper-right">
+                            <button id="stepBack" class="btn">Back</button>
+                            <button id="stepNext" class="btn primary">Next</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-b">
+                    <!-- Step inputs are all visible for MVP (simple). You can hide/show per step later. -->
+                    <div class="row">
+                        <label>
+                            Event type
+                            <select id="eventType">
+                                <option value="">Select…</option>
+                                <option>Wedding</option>
+                                <option>Debut</option>
+                                <option>Birthday</option>
+                                <option>Corporate</option>
+                                <option>Other</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <label>
+                            Guests (pax)
+                            <input id="pax" type="number" min="1" placeholder="e.g., 80" />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Budget min
+                            <input id="budgetMin" type="number" min="0" placeholder="e.g., 30000" />
+                        </label>
+                        <label>
+                            Budget max
+                            <input id="budgetMax" type="number" min="0" placeholder="e.g., 120000" />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Start date
+                            <input id="dateStart" type="date" />
+                        </label>
+                        <label>
+                            End date
+                            <input id="dateEnd" type="date" />
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <label>
+                            Location keyword (area/city)
+                            <input id="locationText" placeholder="e.g., Makati, BGC, QC" />
+                        </label>
+                    </div>
+
+                    <div class="divider"></div>
+                    <h3>More filters</h3>
+
+                    <div class="row two">
+                        <label>
+                            Rating (min)
+                            <select id="ratingMin">
+                                <option value="0">Any</option>
+                                <option value="3.5">3.5+</option>
+                                <option value="4.0">4.0+</option>
+                                <option value="4.3">4.3+</option>
+                                <option value="4.6">4.6+</option>
+                            </select>
+                        </label>
+                        <label>
+                            Reviews (min)
+                            <input id="reviewsMin" type="number" min="0" placeholder="e.g., 20" />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>
+                            Sort by
+                            <select id="sortBy">
+                                <option value="best">Best match</option>
+                                <option value="distance">Distance</option>
+                                <option value="rating">Rating</option>
+                                <option value="price_low">Price (low→high)</option>
+                                <option value="price_high">Price (high→low)</option>
+                            </select>
+                        </label>
+                        <label>
+                            Distance cap (km)
+                            <input id="maxKm" type="number" min="1" placeholder="e.g., 10" />
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="muted small">Amenities (tap to select)</div>
+                        <div id="amenitiesWrap" class="chips"></div>
+                    </div>
+
+                    <div class="callout">
+                        <div class="callout-title">Availability confidence</div>
+                        <div class="muted small">
+                            <b>Verified</b> = claimed + recently updated availability.<br />
+                            <b>Likely</b> = updated within 30 days.<br />
+                            <b>Unverified</b> = no availability data yet.
+                        </div>
+                    </div>
+
+                    <div class="callout">
+                        <div class="callout-title">Proximity</div>
+                        <div class="muted small">
+                            Click “Use my location” for distance filters/sorting.
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- RIGHT: Results -->
+            <section class="card results">
+                <div class="card-h">
+                    <h2>Results</h2>
+                    <div class="subrow">
+                        <div id="resultMeta" class="muted">Loading…</div>
+                        <div class="pill" id="geoStatus">Location: not set</div>
+                    </div>
+                </div>
+
+                <div class="anchor" id="resultsAnchor"></div>
+                <div id="resultsList" class="list"></div>
+
+                <!-- Sticky bar -->
+                <div id="stickyBar" class="sticky"></div>
+            </section>
+        </section>
+    </main>
+
+    <!-- Optional inquiry modal (find.js will use it if present; otherwise it uses prompt()) -->
+    <div id="inqModal" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-h">
+                <div>
+                    <div class="modal-title">Send inquiry</div>
+                    <div class="muted small">Send one inquiry to selected venue(s).</div>
+                </div>
+                <button id="inqClose" class="btn">✕</button>
+            </div>
+
+            <div class="modal-b">
+                <form id="inqForm" class="form">
+                    <div class="row two">
+                        <label>Event type
+                            <select name="eventType" required>
+                                <option value="">Select…</option>
+                                <option>Wedding</option>
+                                <option>Debut</option>
+                                <option>Birthday</option>
+                                <option>Corporate</option>
+                                <option>Other</option>
+                            </select>
+                        </label>
+                        <label>Pax
+                            <input name="pax" type="number" min="1" required />
+                        </label>
+                    </div>
+
+                    <div class="row two">
+                        <label>Start date <input name="startDate" type="date" required /></label>
+                        <label>End date <input name="endDate" type="date" required /></label>
+                    </div>
+
+                    <div class="row two">
+                        <label>Contact method
+                            <select name="contactMethod" required>
+                                <option value="">Select…</option>
+                                <option>Messenger</option>
+                                <option>Viber</option>
+                                <option>WhatsApp</option>
+                                <option>Email</option>
+                                <option>Phone</option>
+                            </select>
+                        </label>
+                        <label>Contact details
+                            <input name="contactDetails" required placeholder="Email/number/handle" />
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <label>Your name
+                            <input name="customerName" required placeholder="Your name" />
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <label>Notes (optional)
+                            <textarea name="notes" rows="3" placeholder="Timing, package needs, questions…"></textarea>
+                        </label>
+                    </div>
+
+                    <div class="row actions">
+                        <button class="btn primary" type="submit">Send inquiry</button>
+                        <button class="btn" type="button" id="inqClose2"
+                            onclick="document.getElementById('inqClose').click()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="customer-config.js"></script>
+    <script src="customer-utils.js"></script>
+    <script src="customer-supabase.js"></script>
+    <script src="customer-state.js"></script>
+    <script src="customer-ui.js"></script>
+    <script src="customer-pages.js"></script>
+
+    <script src="find.js"></script>
+</body>
+
+</html>

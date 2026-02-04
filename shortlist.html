@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Shared Shortlist</title>
+    <link rel="stylesheet" href="venues.css" />
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">◎</div>
+            <div>
+                <div id="shortTitle" class="title">Shortlist</div>
+                <div id="shortMeta" class="subtitle">Loading…</div>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <a class="navlink" href="find.html">Back to Finder</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="card results">
+            <div class="card-h">
+                <h2>Venues</h2>
+                <p class="muted small">
+                    This page loads a shortlist using <code>?token=...</code>.
+                </p>
+            </div>
+            <div id="shortList" class="list"></div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="customer-config.js"></script>
+    <script src="customer-utils.js"></script>
+    <script src="customer-supabase.js"></script>
+    <script src="customer-state.js"></script>
+    <script src="customer-ui.js"></script>
+    <script src="customer-pages.js"></script>
+
+    <script src="shortlist.js"></script>
+</body>
+
+</html>
