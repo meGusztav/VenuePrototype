@@ -170,30 +170,37 @@ window.UI = (() => {
 })();
 
 UI.openVenueDetails = function(v){
+  const $ = Utils.$;
+
   $("#vdName").textContent = v.name;
   $("#vdMeta").textContent =
-    `${v.area} • Guests ${v.paxMin}-${v.paxMax} • ${UI.priceText(v)}`;
+    `${v.area} • Guests ${v.pax_min}-${v.pax_max} • ${UI.priceText(v)}`;
 
-  $("#vdContactName").textContent = v.contact_name || "Venue sales team";
-  $("#vdContactRole").textContent = v.contact_role || "Sales";
+  $("#vdContactName").textContent = v.contact_name || "Sales Team";
+  $("#vdContactRole").textContent = v.contact_role || "Venue Sales";
   $("#vdPhone").textContent = v.phone || "Available after inquiry";
   $("#vdEmail").textContent = v.email || "Available after inquiry";
 
   const site = $("#vdWebsite");
-  if (v.website) {
-    site.innerHTML = `<a href="${v.website}" target="_blank">${v.website}</a>`;
-  } else {
-    site.textContent = "—";
-  }
+  if (v.website) site.innerHTML = `<a href="${v.website}" target="_blank" rel="noopener">${v.website}</a>`;
+  else site.textContent = "—";
 
   $("#vdInquiryBtn").onclick = () => {
     UI.closeVenueDetails();
-    Pages.openInquiryForVenue(v.id);
+    // Use your existing flow:
+    // If you have openInquiryModal in find.js, keep calling onDetails -> openInquiryModal
+    // If you added Pages.openInquiryForVenue, make sure it exists.
+    if (typeof Pages.openInquiryForVenue === "function") Pages.openInquiryForVenue(v.id);
+    else if (typeof Pages.submitInquiryToSelectedVenues === "function") {
+      // fallback: open find.js inquiry modal flow if you still have it
+      alert("Inquiry flow not wired. Add Pages.openInquiryForVenue or keep using openInquiryModal in find.js.");
+    }
   };
 
   $("#venueDetailsModal").classList.remove("hidden");
 };
 
 UI.closeVenueDetails = function(){
+  const $ = Utils.$;
   $("#venueDetailsModal").classList.add("hidden");
 };
