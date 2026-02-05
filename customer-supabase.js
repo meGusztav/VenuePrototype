@@ -6,7 +6,13 @@ window.DB = (() => {
   async function fetchVenuesBase(limit = cfg.MAX_VENUES_FETCH){
     const { data, error } = await sb
       .from("venues")
-      .select("id,name,area,address,lat,lon,pax_min,pax_max,price_from,price_to,currency,rating,review_count,is_claimed,availability_source,availability_last_sync,profile_last_updated")
+      .select(
+      "id,name,area,address,lat,lon," +
+      "pax_min,pax_max,price_from,price_to,currency," +
+      "rating,review_count,is_claimed,availability_source," +
+      "availability_last_sync,profile_last_updated," +
+      "phone,email,website,contact_name,contact_role"
+      )
       .limit(limit);
 
     if (error) throw error;
