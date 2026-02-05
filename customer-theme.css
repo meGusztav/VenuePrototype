@@ -173,3 +173,76 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+/* --- Fix dark hero sections from venues.css --- */
+/* These selectors are intentionally broad to catch your hero wrapper */
+.hero,
+.header-card,
+.masthead,
+.panel,
+.jumbo,
+.card.hero,
+.card.masthead,
+.card.panel,
+#hero,
+#headerCard,
+#masthead {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+}
+
+/* Ensure text inside those sections becomes readable */
+.hero *,
+.header-card *,
+.masthead *,
+.panel *,
+.jumbo *,
+#hero *,
+#headerCard *,
+#masthead * {
+    color: inherit;
+}
+
+/* If your hero uses gradient overlays, kill them */
+.hero::before,
+.hero::after,
+.header-card::before,
+.header-card::after,
+.masthead::before,
+.masthead::after,
+.panel::before,
+.panel::after,
+.jumbo::before,
+.jumbo::after,
+#hero::before,
+#hero::after,
+#headerCard::before,
+#headerCard::after,
+#masthead::before,
+#masthead::after {
+    content: none !important;
+}
+
+/* Make ALL cards white in customer mode */
+.card {
+    background: var(--card) !important;
+    color: var(--text) !important;
+}
+
+/* Metrics/stat chips inside hero */
+.stat,
+.stats,
+.kpi,
+.metric,
+.metric-card {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+}
+
+/* Make subtle helper text readable */
+.small,
+.muted {
+    color: var(--muted) !important;
+}
