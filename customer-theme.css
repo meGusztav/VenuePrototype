@@ -1,0 +1,175 @@
+/* customer-theme.css
+   Light, customer-facing theme overrides for Find / Compare / Shortlist
+   Load AFTER venues.css
+*/
+
+:root {
+    /* Base */
+    --bg: #f6f8fc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #5b6477;
+    --border: #e4e8f2;
+    --shadow: 0 10px 30px rgba(15, 23, 42, .08);
+
+    /* Brand */
+    --primary: #1a73e8;
+    --primarySoft: rgba(26, 115, 232, .12);
+
+    /* Status */
+    --good: #16a34a;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+}
+
+/* Body background + text */
+html,
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* Topbar becomes light glass */
+.topbar {
+    background: rgba(246, 248, 252, .88) !important;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Logo toned down (less “dark UI” vibe) */
+.logo {
+    background: linear-gradient(135deg, rgba(26, 115, 232, .10), rgba(26, 115, 232, .04)) !important;
+    border-color: var(--border) !important;
+}
+
+/* Cards: remove dark gradients */
+.card,
+.modal {
+    background: var(--card) !important;
+    border-color: var(--border) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+    background: #ffffff !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(91, 100, 119, .75);
+}
+
+/* Remove forced dark selects from venues.css */
+select {
+    background-color: #ffffff !important;
+    color: var(--text) !important;
+}
+
+option {
+    background: #ffffff !important;
+    color: var(--text) !important;
+}
+
+/* Nav links */
+.navlink {
+    background: #ffffff !important;
+    color: var(--muted) !important;
+}
+
+.navlink:hover {
+    background: #f8fafc !important;
+}
+
+/* Buttons */
+.btn {
+    background: #ffffff !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, .04);
+}
+
+.btn:hover {
+    background: #f8fafc !important;
+}
+
+.btn.primary {
+    background: var(--primary) !important;
+    border-color: rgba(26, 115, 232, .35) !important;
+    color: #ffffff !important;
+}
+
+.btn.primary:hover {
+    filter: brightness(.98);
+}
+
+/* Pills / chips */
+.pill {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+    color: var(--muted) !important;
+}
+
+.chip {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+    color: var(--muted) !important;
+}
+
+.chip.active {
+    background: var(--primarySoft) !important;
+    border-color: rgba(26, 115, 232, .25) !important;
+    color: #134b9a !important;
+}
+
+/* Status pills */
+.pill.good {
+    border-color: rgba(22, 163, 74, .25) !important;
+    background: rgba(22, 163, 74, .08) !important;
+    color: var(--good) !important;
+}
+
+.pill.warn {
+    border-color: rgba(245, 158, 11, .25) !important;
+    background: rgba(245, 158, 11, .10) !important;
+    color: #8a5a00 !important;
+}
+
+/* Results list separators look lighter */
+.results .list {
+    border-top: 1px solid var(--border) !important;
+}
+
+/* Item hover becomes subtle */
+.item:hover {
+    background: rgba(15, 23, 42, .03) !important;
+}
+
+/* Search pills look like consumer app */
+.search-pill {
+    background: #ffffff !important;
+    border-color: var(--border) !important;
+}
+
+/* Modal backdrop lighter */
+.modal-backdrop {
+    background: rgba(15, 23, 42, .45) !important;
+}
+
+/* Sticky bar: light */
+.sticky {
+    background: rgba(246, 248, 252, .92) !important;
+    border-top: 1px solid var(--border) !important;
+}
+
+/* Small polish: links */
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    text-decoration: underline;
+}
