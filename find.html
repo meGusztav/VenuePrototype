@@ -7,7 +7,176 @@
     <title>Find a Venue</title>
     <link rel="stylesheet" href="venues.css" />
     <style>
-        /* Minimal additions (you can move into venues.css) */
+        /* ---------- Investor + Customer friendly add-ons ---------- */
+        .hidden {
+            display: none !important;
+        }
+
+        .hero {
+            padding: 22px 18px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, rgba(18, 20, 27, .9), rgba(15, 17, 23, .9));
+            box-shadow: var(--shadow);
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 26px;
+            line-height: 1.1;
+            letter-spacing: .2px;
+        }
+
+        .hero-sub {
+            margin: 10px 0 0;
+            color: var(--muted);
+            max-width: 70ch;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .hero-cta {
+            margin-top: 14px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .hero-metrics {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .metric {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            justify-content: space-between;
+        }
+
+        .metric strong {
+            font-size: 18px;
+        }
+
+        .metric span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 980px) {
+            .hero h1 {
+                font-size: 22px;
+            }
+
+            .hero-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .investor-callout {
+            margin-top: 12px;
+            border: 1px solid rgba(255, 255, 255, .08);
+            background: rgba(255, 255, 255, .04);
+            border-radius: 16px;
+            padding: 12px 12px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .investor-callout strong {
+            color: var(--text);
+        }
+
+        /* Search bar (Agoda/Maps style) */
+        .searchbar {
+            margin-bottom: 14px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 14px 14px 10px;
+        }
+
+        .search-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
+            border-radius: 999px;
+            padding: 10px 12px;
+            min-width: 220px;
+            flex: 1 1 260px;
+        }
+
+        .search-pill input {
+            border: 0;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .search-pill input:focus {
+            outline: none;
+        }
+
+        .search-pill .icon {
+            opacity: .85;
+        }
+
+        .quick-chips {
+            padding: 0 14px 14px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* “How it works” strip */
+        .how-it-works {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .how-it-works .step {
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+        .how-it-works h3 {
+            margin: 0 0 6px;
+            font-size: 14px;
+        }
+
+        .how-it-works p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        @media (max-width: 980px) {
+            .how-it-works {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sticky action bar */
         .sticky {
             position: sticky;
             bottom: 0;
@@ -30,51 +199,29 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, .14);
-            display: inline-block;
-            margin-right: 6px;
-        }
-
-        .dot.on {
-            background: rgba(255, 255, 255, .55);
-        }
-
-        .stepper-bar {
-            display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
+        }
+
+        /* Results list feels more consumer-like (no fixed height) */
+        .results .list {
             border-top: 1px solid var(--border);
-            padding-top: 12px;
-            margin-top: 12px;
+            max-height: none;
+            overflow: visible;
         }
 
-        .stepper-left {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        /* Disabled button styling */
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
         }
 
-        .stepper-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .anchor {
-            height: 1px;
-        }
-
-        .modal-backdrop.hidden {
-            display: none;
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, .04);
         }
     </style>
 </head>
@@ -84,67 +231,205 @@
         <div class="brand">
             <div class="logo">◎</div>
             <div>
-                <div class="title">Find a Venue</div>
-                <div class="subtitle">Customer prototype • Guided search • Compare • Shortlist</div>
+                <div class="title">Venue Finder</div>
+                <div class="subtitle">Discover • Compare • Inquire — Metro Manila (Prototype)</div>
             </div>
         </div>
 
         <nav class="nav">
-            <a class="navlink" href="index.html">Admin Prototype</a>
+            <a class="navlink" href="index.html">Admin</a>
             <button id="geoBtn" class="btn">Use my location</button>
         </nav>
     </header>
 
     <main class="container">
-        <section class="grid">
-            <!-- LEFT: Guided + Filters -->
-            <section class="card searchbar">
-                <div class="search-row">
-                    <div class="search-pill">
-                        <span class="icon">📍</span>
-                        <input id="locationText" placeholder="City or area (e.g., Makati, BGC)" />
-                    </div>
-            
-                    <div class="search-pill">
-                        <span class="icon">📅</span>
-                        <input id="dateStart" type="date" />
-                        <span class="muted small">to</span>
-                        <input id="dateEnd" type="date" />
-                    </div>
-            
-                    <div class="search-pill">
-                        <span class="icon">👥</span>
-                        <input id="pax" type="number" min="1" placeholder="Guests" />
-                    </div>
-            
-                    <button id="filtersBtn" class="btn">Filters</button>
-                    <button id="searchBtn" class="btn primary">Search</button>
+        <!-- HERO (Investor-friendly framing) -->
+        <section class="hero">
+            <h1>Find and book event venues in minutes — not weeks</h1>
+            <p class="hero-sub">
+                One place to search, compare, and send an inquiry across multiple venues.
+                No scattered Facebook DMs, no spreadsheets, no guesswork.
+            </p>
+
+            <div class="hero-cta">
+                <button class="btn primary" onclick="document.getElementById('locationText')?.focus()">Try the
+                    demo</button>
+                <span class="muted small">Tip: set guests + dates, then tap <b>Search</b>.</span>
+            </div>
+
+            <div class="hero-metrics" aria-label="Demo metrics">
+                <div class="metric"><strong>50+</strong><span>venues indexed</span></div>
+                <div class="metric"><strong>3</strong><span>cities live</span></div>
+                <div class="metric"><strong>1</strong><span>multi-venue inquiry</span></div>
+            </div>
+
+            <div class="investor-callout">
+                <strong>Why this matters:</strong>
+                Venue discovery is fragmented, availability is manual, and pricing is inconsistent.
+                We normalize venue data so customers can compare and inquire at scale — and venues can claim profiles +
+                sync calendars.
+            </div>
+
+            <div class="how-it-works" aria-label="How it works">
+                <div class="step">
+                    <h3>1) Search</h3>
+                    <p>Pick a location, dates, guests, and budget.</p>
                 </div>
-            
-                <div class="quick-chips" id="quickChips"></div>
-            </section>
+                <div class="step">
+                    <h3>2) Compare</h3>
+                    <p>We standardize capacity, pricing, and confidence signals.</p>
+                </div>
+                <div class="step">
+                    <h3>3) Inquire once</h3>
+                    <p>Send one inquiry to multiple venues and track responses.</p>
+                </div>
+            </div>
+        </section>
 
-
-            <!-- RIGHT: Results -->
-            <section class="card results">
-                <div class="card-h">
-                    <h2>Results</h2>
-                    <div class="subrow">
-                        <div id="resultMeta" class="muted">Loading…</div>
-                        <div class="pill" id="geoStatus">Location: not set</div>
-                    </div>
+        <!-- SEARCH BAR (Customer friendly) -->
+        <section class="card searchbar">
+            <div class="search-row">
+                <div class="search-pill">
+                    <span class="icon">📍</span>
+                    <input id="locationText" placeholder="City or area (e.g., Makati, BGC, Alabang)" />
                 </div>
 
-                <div class="anchor" id="resultsAnchor"></div>
-                <div id="resultsList" class="list"></div>
+                <div class="search-pill" style="flex: 2 1 360px; min-width: 280px;">
+                    <span class="icon">📅</span>
+                    <input id="dateStart" type="date" />
+                    <span class="muted small">to</span>
+                    <input id="dateEnd" type="date" />
+                </div>
 
-                <!-- Sticky bar -->
-                <div id="stickyBar" class="sticky"></div>
-            </section>
+                <div class="search-pill" style="min-width: 150px; flex: 0 1 180px;">
+                    <span class="icon">👥</span>
+                    <input id="pax" type="number" min="1" placeholder="Guests" />
+                </div>
+
+                <button id="filtersBtn" class="btn">Filters</button>
+                <button id="searchBtn" class="btn primary">Search</button>
+            </div>
+
+            <!-- Optional quick filter chips (purely cosmetic; safe to leave empty) -->
+            <div class="quick-chips" id="quickChips">
+                <div class="pill">Wedding</div>
+                <div class="pill">Debut</div>
+                <div class="pill">Corporate</div>
+                <div class="pill">Outdoor</div>
+                <div class="pill">Parking</div>
+            </div>
+        </section>
+
+        <!-- RESULTS -->
+        <section class="card results">
+            <div class="card-h">
+                <h2>Results</h2>
+                <div class="subrow">
+                    <div id="resultMeta" class="muted">Loading…</div>
+                    <div class="pill" id="geoStatus">Location: not set</div>
+                </div>
+            </div>
+
+            <div class="anchor" id="resultsAnchor"></div>
+            <div id="resultsList" class="list"></div>
+
+            <div id="stickyBar" class="sticky"></div>
+
+            <div class="card-b">
+                <div class="muted small">
+                    <b>Revenue paths:</b> venue subscriptions, paid leads, promoted listings, booking fees.
+                </div>
+            </div>
         </section>
     </main>
 
-    <!-- Optional inquiry modal (find.js will use it if present; otherwise it uses prompt()) -->
+    <!-- FILTERS MODAL -->
+    <div id="filtersModal" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-h">
+                <div>
+                    <div class="modal-title">Filters</div>
+                    <div class="muted small">Narrow down your options</div>
+                </div>
+                <button id="filtersClose" class="btn">✕</button>
+            </div>
+
+            <div class="modal-b">
+                <div class="row">
+                    <label>
+                        Event type
+                        <select id="eventType">
+                            <option value="">Any</option>
+                            <option>Wedding</option>
+                            <option>Debut</option>
+                            <option>Birthday</option>
+                            <option>Corporate</option>
+                            <option>Other</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="row two">
+                    <label>Budget min
+                        <input id="budgetMin" type="number" min="0" placeholder="₱ 0" />
+                    </label>
+                    <label>Budget max
+                        <input id="budgetMax" type="number" min="0" placeholder="₱ 120,000" />
+                    </label>
+                </div>
+
+                <div class="row two">
+                    <label>Rating
+                        <select id="ratingMin">
+                            <option value="0">Any</option>
+                            <option value="4.0">4.0+</option>
+                            <option value="4.3">4.3+</option>
+                            <option value="4.6">4.6+</option>
+                        </select>
+                    </label>
+                    <label>Reviews (min)
+                        <input id="reviewsMin" type="number" min="0" placeholder="e.g., 20" />
+                    </label>
+                </div>
+
+                <div class="row two">
+                    <label>Sort
+                        <select id="sortBy">
+                            <option value="best">Best match</option>
+                            <option value="distance">Distance</option>
+                            <option value="rating">Rating</option>
+                            <option value="price_low">Price (low→high)</option>
+                            <option value="price_high">Price (high→low)</option>
+                        </select>
+                    </label>
+                    <label>Within (km)
+                        <input id="maxKm" type="number" min="1" placeholder="e.g., 10" />
+                    </label>
+                </div>
+
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="muted small">Amenities</div>
+                    <div id="amenitiesWrap" class="chips"></div>
+                </div>
+
+                <div class="row actions" style="margin-top:14px;">
+                    <button id="applyFilters" class="btn primary">Apply</button>
+                    <button id="clearFilters" class="btn">Clear</button>
+                </div>
+
+                <div class="callout">
+                    <div class="callout-title">Availability confidence</div>
+                    <div class="muted small">
+                        <b>Confirmed</b> (claimed + recent sync) • <b>Probably</b> (updated recently) • <b>Unknown</b>
+                        (no recent data)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry modal (optional; used by find.js if present) -->
     <div id="inqModal" class="modal-backdrop hidden" aria-hidden="true">
         <div class="modal" role="dialog" aria-modal="true">
             <div class="modal-h">
@@ -168,7 +453,7 @@
                                 <option>Other</option>
                             </select>
                         </label>
-                        <label>Pax
+                        <label>Guests
                             <input name="pax" type="number" min="1" required />
                         </label>
                     </div>
@@ -208,73 +493,10 @@
 
                     <div class="row actions">
                         <button class="btn primary" type="submit">Send inquiry</button>
-                        <button class="btn" type="button" id="inqClose2"
+                        <button class="btn" type="button"
                             onclick="document.getElementById('inqClose').click()">Cancel</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <div id="filtersModal" class="modal-backdrop hidden" aria-hidden="true">
-        <div class="modal" role="dialog" aria-modal="true">
-            <div class="modal-h">
-                <div>
-                    <div class="modal-title">Filters</div>
-                    <div class="muted small">Narrow down your options</div>
-                </div>
-                <button id="filtersClose" class="btn">✕</button>
-            </div>
-    
-            <div class="modal-b">
-                <div class="row two">
-                    <label>Budget min
-                        <input id="budgetMin" type="number" min="0" placeholder="₱ 0" />
-                    </label>
-                    <label>Budget max
-                        <input id="budgetMax" type="number" min="0" placeholder="₱ 120,000" />
-                    </label>
-                </div>
-    
-                <div class="row two">
-                    <label>Rating
-                        <select id="ratingMin">
-                            <option value="0">Any</option>
-                            <option value="4.0">4.0+</option>
-                            <option value="4.3">4.3+</option>
-                            <option value="4.6">4.6+</option>
-                        </select>
-                    </label>
-                    <label>Reviews (min)
-                        <input id="reviewsMin" type="number" min="0" placeholder="e.g., 20" />
-                    </label>
-                </div>
-    
-                <div class="row two">
-                    <label>Sort
-                        <select id="sortBy">
-                            <option value="best">Best match</option>
-                            <option value="distance">Distance</option>
-                            <option value="rating">Rating</option>
-                            <option value="price_low">Price (low→high)</option>
-                            <option value="price_high">Price (high→low)</option>
-                        </select>
-                    </label>
-                    <label>Within (km)
-                        <input id="maxKm" type="number" min="1" placeholder="e.g., 10" />
-                    </label>
-                </div>
-    
-                <div class="divider"></div>
-                <div class="row">
-                    <div class="muted small">Amenities</div>
-                    <div id="amenitiesWrap" class="chips"></div>
-                </div>
-    
-                <div class="row actions" style="margin-top:14px;">
-                    <button id="applyFilters" class="btn primary">Apply</button>
-                    <button id="clearFilters" class="btn">Clear</button>
-                </div>
             </div>
         </div>
     </div>
