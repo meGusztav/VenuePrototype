@@ -183,8 +183,8 @@ UI.openVenueDetails = function (v) {
 
   $("#vdContactName").textContent = v.contact_name || "Sales Team";
   $("#vdContactRole").textContent = v.contact_role || "Venue Sales";
-  $("#vdPhone").textContent = v.phone || "Available after inquiry";
-  $("#vdEmail").textContent = v.email || "Available after inquiry";
+  $("#vdPhone").textContent = v.phone;
+  $("#vdEmail").textContent = v.email;
 
   const site = $("#vdWebsite");
   if (v.website) {
