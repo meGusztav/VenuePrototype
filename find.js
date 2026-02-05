@@ -353,18 +353,9 @@
   });
 
   // --- Details handler
-  function onDetails(v) {
-    const conf = (v.confidence || "unverified").toUpperCase();
-    const msg =
-      `${v.name}\n${v.area}\n` +
-      `Guests: ${v.paxMin}-${v.paxMax}\n` +
-      `Price: ${UI.priceText(v)}\n` +
-      `Rating: ${Number(v.rating || 0).toFixed(1)} (${v.reviewCount || 0})\n` +
-      `Availability: ${conf}\n` +
-      `Last updated: ${UI.lastUpdatedText(v.availability_last_sync || v.profile_last_updated)}\n\n` +
-      `Send an inquiry to this venue now?`;
-    if (confirm(msg)) openInquiryModal([v.id]);
-  }
+  function onDetails(v){
+  UI.openVenueDetails(v);
+}
 
   function onCompareChange() { apply(); }
   function onShortlistChange() { apply(); }

@@ -168,3 +168,32 @@ window.UI = (() => {
     confidenceBadge
   };
 })();
+
+UI.openVenueDetails = function(v){
+  $("#vdName").textContent = v.name;
+  $("#vdMeta").textContent =
+    `${v.area} • Guests ${v.paxMin}-${v.paxMax} • ${UI.priceText(v)}`;
+
+  $("#vdContactName").textContent = v.contact_name || "Venue sales team";
+  $("#vdContactRole").textContent = v.contact_role || "Sales";
+  $("#vdPhone").textContent = v.phone || "Available after inquiry";
+  $("#vdEmail").textContent = v.email || "Available after inquiry";
+
+  const site = $("#vdWebsite");
+  if (v.website) {
+    site.innerHTML = `<a href="${v.website}" target="_blank">${v.website}</a>`;
+  } else {
+    site.textContent = "—";
+  }
+
+  $("#vdInquiryBtn").onclick = () => {
+    UI.closeVenueDetails();
+    Pages.openInquiryForVenue(v.id);
+  };
+
+  $("#venueDetailsModal").classList.remove("hidden");
+};
+
+UI.closeVenueDetails = function(){
+  $("#venueDetailsModal").classList.add("hidden");
+};

@@ -544,3 +544,32 @@ code {
         min-width: 160px;
     }
 }
+
+.vd-section h3 {
+    margin: 0 0 10px;
+    font-size: 15px;
+}
+
+.vd-contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 14px;
+    font-size: 13px;
+}
+
+.vd-contact span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.vd-contact strong {
+    font-weight: 600;
+    word-break: break-word;
+}
+
+@media (max-width: 720px) {
+    .vd-contact {
+        grid-template-columns: 1fr;
+    }
+}

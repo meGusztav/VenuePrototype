@@ -501,6 +501,36 @@
         </div>
     </div>
 
+    <div id="venueDetailsModal" class="modal-backdrop hidden">
+        <div class="modal">
+            <div class="modal-h">
+                <div class="modal-title" id="vdName">Venue</div>
+                <button class="btn" onclick="UI.closeVenueDetails()">✕</button>
+            </div>
+    
+            <div class="modal-b">
+                <div id="vdMeta" class="muted small"></div>
+    
+                <div class="divider"></div>
+    
+                <div class="vd-section">
+                    <h3>Contact information</h3>
+                    <div class="vd-contact">
+                        <div><span>Contact</span><strong id="vdContactName">—</strong></div>
+                        <div><span>Role</span><strong id="vdContactRole">—</strong></div>
+                        <div><span>Phone</span><strong id="vdPhone">—</strong></div>
+                        <div><span>Email</span><strong id="vdEmail">—</strong></div>
+                        <div><span>Website</span><strong id="vdWebsite">—</strong></div>
+                    </div>
+                </div>
+    
+                <div class="row actions" style="margin-top:14px;">
+                    <button class="btn primary" id="vdInquiryBtn">Send inquiry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
