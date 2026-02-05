@@ -169,12 +169,17 @@ window.UI = (() => {
   };
 })();
 
-UI.openVenueDetails = function(v){
+// Venue details modal (customer friendly)
+UI.openVenueDetails = function (v) {
   const $ = Utils.$;
 
-  $("#vdName").textContent = v.name;
+  // Support both naming styles just in case
+  const paxMin = v.pax_min ?? v.paxMin ?? "";
+  const paxMax = v.pax_max ?? v.paxMax ?? "";
+
+  $("#vdName").textContent = v.name || "Venue";
   $("#vdMeta").textContent =
-    `${v.area} • Guests ${v.pax_min}-${v.pax_max} • ${UI.priceText(v)}`;
+    `${v.area || ""}${v.area ? " • " : ""}Guests ${paxMin}-${paxMax} • ${UI.priceText(v)}`;
 
   $("#vdContactName").textContent = v.contact_name || "Sales Team";
   $("#vdContactRole").textContent = v.contact_role || "Venue Sales";
@@ -182,25 +187,31 @@ UI.openVenueDetails = function(v){
   $("#vdEmail").textContent = v.email || "Available after inquiry";
 
   const site = $("#vdWebsite");
-  if (v.website) site.innerHTML = `<a href="${v.website}" target="_blank" rel="noopener">${v.website}</a>`;
-  else site.textContent = "—";
+  if (v.website) {
+    site.innerHTML = `<a href="${v.website}" target="_blank" rel="noopener">${v.website}</a>`;
+  } else {
+    site.textContent = "—";
+  }
 
   $("#vdInquiryBtn").onclick = () => {
     UI.closeVenueDetails();
-    // Use your existing flow:
-    // If you have openInquiryModal in find.js, keep calling onDetails -> openInquiryModal
-    // If you added Pages.openInquiryForVenue, make sure it exists.
-    if (typeof Pages.openInquiryForVenue === "function") Pages.openInquiryForVenue(v.id);
-    else if (typeof Pages.submitInquiryToSelectedVenues === "function") {
-      // fallback: open find.js inquiry modal flow if you still have it
-      alert("Inquiry flow not wired. Add Pages.openInquiryForVenue or keep using openInquiryModal in find.js.");
+
+    // ✅ Safe fallback if Pages.openInquiryForVenue doesn't exist
+    if (typeof Pages.openInquiryForVenue === "function") {
+      Pages.openInquiryForVenue(v.id);
+    } else if (typeof Pages.submitInquiryToSelectedVenues === "function") {
+      // If your inquiry flow is still handled in find.js via modal/prompt,
+      // you can just trigger the existing "Inquiry" button behavior.
+      alert("Inquiry flow not wired yet. Keep using the Inquiry button / modal in Find page, or implement Pages.openInquiryForVenue().");
+    } else {
+      alert("Inquiry flow not available.");
     }
   };
 
   $("#venueDetailsModal").classList.remove("hidden");
 };
 
-UI.closeVenueDetails = function(){
+UI.closeVenueDetails = function () {
   const $ = Utils.$;
   $("#venueDetailsModal").classList.add("hidden");
 };
