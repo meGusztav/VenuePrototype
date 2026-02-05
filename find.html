@@ -98,134 +98,32 @@
     <main class="container">
         <section class="grid">
             <!-- LEFT: Guided + Filters -->
-            <aside class="card filters">
-                <div class="card-h">
-                    <h2>Guided search</h2>
-                    <p class="muted">Answer a few questions, then browse matches.</p>
-
-                    <div class="stepper-bar">
-                        <div class="stepper-left">
-                            <div id="stepLabel" class="muted">Step 1/5 — Event type</div>
-                            <div id="stepDots"></div>
-                        </div>
-                        <div class="stepper-right">
-                            <button id="stepBack" class="btn">Back</button>
-                            <button id="stepNext" class="btn primary">Next</button>
-                        </div>
+            <section class="card searchbar">
+                <div class="search-row">
+                    <div class="search-pill">
+                        <span class="icon">📍</span>
+                        <input id="locationText" placeholder="City or area (e.g., Makati, BGC)" />
                     </div>
+            
+                    <div class="search-pill">
+                        <span class="icon">📅</span>
+                        <input id="dateStart" type="date" />
+                        <span class="muted small">to</span>
+                        <input id="dateEnd" type="date" />
+                    </div>
+            
+                    <div class="search-pill">
+                        <span class="icon">👥</span>
+                        <input id="pax" type="number" min="1" placeholder="Guests" />
+                    </div>
+            
+                    <button id="filtersBtn" class="btn">Filters</button>
+                    <button id="searchBtn" class="btn primary">Search</button>
                 </div>
+            
+                <div class="quick-chips" id="quickChips"></div>
+            </section>
 
-                <div class="card-b">
-                    <!-- Step inputs are all visible for MVP (simple). You can hide/show per step later. -->
-                    <div class="row">
-                        <label>
-                            Event type
-                            <select id="eventType">
-                                <option value="">Select…</option>
-                                <option>Wedding</option>
-                                <option>Debut</option>
-                                <option>Birthday</option>
-                                <option>Corporate</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <div class="row">
-                        <label>
-                            Guests (pax)
-                            <input id="pax" type="number" min="1" placeholder="e.g., 80" />
-                        </label>
-                    </div>
-
-                    <div class="row two">
-                        <label>
-                            Budget min
-                            <input id="budgetMin" type="number" min="0" placeholder="e.g., 30000" />
-                        </label>
-                        <label>
-                            Budget max
-                            <input id="budgetMax" type="number" min="0" placeholder="e.g., 120000" />
-                        </label>
-                    </div>
-
-                    <div class="row two">
-                        <label>
-                            Start date
-                            <input id="dateStart" type="date" />
-                        </label>
-                        <label>
-                            End date
-                            <input id="dateEnd" type="date" />
-                        </label>
-                    </div>
-
-                    <div class="row">
-                        <label>
-                            Location keyword (area/city)
-                            <input id="locationText" placeholder="e.g., Makati, BGC, QC" />
-                        </label>
-                    </div>
-
-                    <div class="divider"></div>
-                    <h3>More filters</h3>
-
-                    <div class="row two">
-                        <label>
-                            Rating (min)
-                            <select id="ratingMin">
-                                <option value="0">Any</option>
-                                <option value="3.5">3.5+</option>
-                                <option value="4.0">4.0+</option>
-                                <option value="4.3">4.3+</option>
-                                <option value="4.6">4.6+</option>
-                            </select>
-                        </label>
-                        <label>
-                            Reviews (min)
-                            <input id="reviewsMin" type="number" min="0" placeholder="e.g., 20" />
-                        </label>
-                    </div>
-
-                    <div class="row two">
-                        <label>
-                            Sort by
-                            <select id="sortBy">
-                                <option value="best">Best match</option>
-                                <option value="distance">Distance</option>
-                                <option value="rating">Rating</option>
-                                <option value="price_low">Price (low→high)</option>
-                                <option value="price_high">Price (high→low)</option>
-                            </select>
-                        </label>
-                        <label>
-                            Distance cap (km)
-                            <input id="maxKm" type="number" min="1" placeholder="e.g., 10" />
-                        </label>
-                    </div>
-
-                    <div class="row">
-                        <div class="muted small">Amenities (tap to select)</div>
-                        <div id="amenitiesWrap" class="chips"></div>
-                    </div>
-
-                    <div class="callout">
-                        <div class="callout-title">Availability confidence</div>
-                        <div class="muted small">
-                            <b>Verified</b> = claimed + recently updated availability.<br />
-                            <b>Likely</b> = updated within 30 days.<br />
-                            <b>Unverified</b> = no availability data yet.
-                        </div>
-                    </div>
-
-                    <div class="callout">
-                        <div class="callout-title">Proximity</div>
-                        <div class="muted small">
-                            Click “Use my location” for distance filters/sorting.
-                        </div>
-                    </div>
-                </div>
-            </aside>
 
             <!-- RIGHT: Results -->
             <section class="card results">
@@ -314,6 +212,69 @@
                             onclick="document.getElementById('inqClose').click()">Cancel</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="filtersModal" class="modal-backdrop hidden" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-h">
+                <div>
+                    <div class="modal-title">Filters</div>
+                    <div class="muted small">Narrow down your options</div>
+                </div>
+                <button id="filtersClose" class="btn">✕</button>
+            </div>
+    
+            <div class="modal-b">
+                <div class="row two">
+                    <label>Budget min
+                        <input id="budgetMin" type="number" min="0" placeholder="₱ 0" />
+                    </label>
+                    <label>Budget max
+                        <input id="budgetMax" type="number" min="0" placeholder="₱ 120,000" />
+                    </label>
+                </div>
+    
+                <div class="row two">
+                    <label>Rating
+                        <select id="ratingMin">
+                            <option value="0">Any</option>
+                            <option value="4.0">4.0+</option>
+                            <option value="4.3">4.3+</option>
+                            <option value="4.6">4.6+</option>
+                        </select>
+                    </label>
+                    <label>Reviews (min)
+                        <input id="reviewsMin" type="number" min="0" placeholder="e.g., 20" />
+                    </label>
+                </div>
+    
+                <div class="row two">
+                    <label>Sort
+                        <select id="sortBy">
+                            <option value="best">Best match</option>
+                            <option value="distance">Distance</option>
+                            <option value="rating">Rating</option>
+                            <option value="price_low">Price (low→high)</option>
+                            <option value="price_high">Price (high→low)</option>
+                        </select>
+                    </label>
+                    <label>Within (km)
+                        <input id="maxKm" type="number" min="1" placeholder="e.g., 10" />
+                    </label>
+                </div>
+    
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="muted small">Amenities</div>
+                    <div id="amenitiesWrap" class="chips"></div>
+                </div>
+    
+                <div class="row actions" style="margin-top:14px;">
+                    <button id="applyFilters" class="btn primary">Apply</button>
+                    <button id="clearFilters" class="btn">Clear</button>
+                </div>
             </div>
         </div>
     </div>

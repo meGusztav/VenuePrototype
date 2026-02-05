@@ -1,5 +1,5 @@
 // find.js
-(async function(){
+(async function () {
   const { $, $all } = Utils;
 
   const els = {
@@ -9,7 +9,7 @@
     geoStatus: $("#geoStatus"),
     stickyBar: $("#stickyBar"),
 
-    // Guided form inputs (you’ll wire these in HTML)
+    // Search + filters inputs (IDs reused across layouts)
     eventType: $("#eventType"),
     pax: $("#pax"),
     budgetMin: $("#budgetMin"),
@@ -26,11 +26,19 @@
     // amenities wrap
     amenitiesWrap: $("#amenitiesWrap"),
 
-    // Step controls
+    // Optional stepper controls (if present in your HTML)
     stepLabel: $("#stepLabel"),
     stepBack: $("#stepBack"),
     stepNext: $("#stepNext"),
     stepDots: $("#stepDots"),
+
+    // Search / Filters UI (if present in your HTML)
+    searchBtn: $("#searchBtn"),
+    filtersBtn: $("#filtersBtn"),
+    filtersModal: $("#filtersModal"),
+    filtersClose: $("#filtersClose"),
+    applyFilters: $("#applyFilters"),
+    clearFilters: $("#clearFilters"),
 
     // Multi-inquiry modal (optional; if missing, we use prompt())
     inquiryModal: $("#inqModal"),
@@ -38,13 +46,19 @@
     inqClose: $("#inqClose")
   };
 
+  // Make the page feel consumer-friendly:
+  // - Don't re-render on every keystroke
+  // - Prefer explicit Search / Apply
+  // - Stepper is optional
+  const CUSTOMER_MODE = true;
+
   // --- Amenities universe (same as you used before)
   const amenityUniverse = [
-    "Parking","Catering","Outdoor","Aircon","Stage","AV system","LED wall","Security",
-    "Accessibility","Photo spots","Bridal room","Near MRT/LRT","Generator","Rain backup","Corkage"
+    "Parking", "Catering", "Outdoor", "Aircon", "Stage", "AV system", "LED wall", "Security",
+    "Accessibility", "Photo spots", "Bridal room", "Near MRT/LRT", "Generator", "Rain backup", "Corkage"
   ];
 
-  function hydrateFromState(){
+  function hydrateFromState() {
     const f = State.state.flow;
     if (els.eventType) els.eventType.value = f.eventType;
     if (els.pax) els.pax.value = f.pax;
@@ -60,33 +74,49 @@
     if (els.sortBy) els.sortBy.value = f.sortBy || "best";
   }
 
-  function bindInputs(){
-    function setFlow(k, v){
+  // Persist only; don’t re-render per keystroke
+  function bindInputs() {
+    function setFlow(k, v) {
       State.state.flow[k] = v;
       State.persist();
-      apply();
     }
 
-    els.eventType?.addEventListener("change", e => setFlow("eventType", e.target.value));
-    els.pax?.addEventListener("input", e => setFlow("pax", e.target.value));
-    els.budgetMin?.addEventListener("input", e => setFlow("budgetMin", e.target.value));
-    els.budgetMax?.addEventListener("input", e => setFlow("budgetMax", e.target.value));
-    els.dateStart?.addEventListener("change", e => setFlow("dateStart", e.target.value));
-    els.dateEnd?.addEventListener("change", e => setFlow("dateEnd", e.target.value));
-    els.locationText?.addEventListener("input", e => setFlow("locationText", e.target.value));
+    // “Search” fields (user will tap Search)
+    els.eventType?.addEventListener("change", (e) => setFlow("eventType", e.target.value));
+    els.pax?.addEventListener("input", (e) => setFlow("pax", e.target.value));
+    els.budgetMin?.addEventListener("input", (e) => setFlow("budgetMin", e.target.value));
+    els.budgetMax?.addEventListener("input", (e) => setFlow("budgetMax", e.target.value));
+    els.dateStart?.addEventListener("change", (e) => setFlow("dateStart", e.target.value));
+    els.dateEnd?.addEventListener("change", (e) => setFlow("dateEnd", e.target.value));
+    els.locationText?.addEventListener("input", (e) => setFlow("locationText", e.target.value));
 
-    els.ratingMin?.addEventListener("change", e => setFlow("ratingMin", e.target.value));
-    els.reviewsMin?.addEventListener("input", e => setFlow("reviewsMin", e.target.value));
-    els.maxKm?.addEventListener("input", e => setFlow("maxKm", e.target.value));
-    els.sortBy?.addEventListener("change", e => setFlow("sortBy", e.target.value));
+    // These can be “instant apply” if you prefer, but we keep them consistent
+    els.ratingMin?.addEventListener("change", (e) => setFlow("ratingMin", e.target.value));
+    els.reviewsMin?.addEventListener("input", (e) => setFlow("reviewsMin", e.target.value));
+    els.maxKm?.addEventListener("input", (e) => setFlow("maxKm", e.target.value));
+    els.sortBy?.addEventListener("change", (e) => {
+      setFlow("sortBy", e.target.value);
+      // Sorting feels ok to apply instantly
+      apply();
+    });
+
+    // Explicit Search
+    els.searchBtn?.addEventListener("click", () => apply());
+
+    // Enter key in search inputs triggers apply (Google-like)
+    [els.locationText, els.pax].forEach((el) => {
+      el?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") apply();
+      });
+    });
   }
 
-  function renderAmenityChips(){
+  function renderAmenityChips() {
     if (!els.amenitiesWrap) return;
     els.amenitiesWrap.innerHTML = "";
     const selected = State.state.flow.amenitySelected;
 
-    amenityUniverse.forEach(a => {
+    amenityUniverse.forEach((a) => {
       const chip = document.createElement("div");
       chip.className = "chip" + (selected.has(a) ? " active" : "");
       chip.textContent = a;
@@ -95,58 +125,64 @@
         else selected.add(a);
         State.persist();
         renderAmenityChips();
-        apply();
+        // In customer mode, apply on “Apply” button if modal exists.
+        // If no modal exists, apply immediately.
+        if (!els.filtersModal) apply();
       });
       els.amenitiesWrap.appendChild(chip);
     });
   }
 
-  // --- Guided stepper (5 steps)
+  // --- Optional guided stepper (5 steps) - kept for compatibility
   const steps = [
-    { label:"Event type", required:["eventType"] },
-    { label:"Guests (pax)", required:["pax"] },
-    { label:"Budget", required:[] },
-    { label:"Dates", required:["dateStart","dateEnd"] },
-    { label:"Location", required:[] }
+    { label: "Event type", required: ["eventType"] },
+    { label: "Guests", required: ["pax"] },
+    { label: "Budget", required: [] },
+    { label: "Dates", required: ["dateStart", "dateEnd"] },
+    { label: "Location", required: [] }
   ];
 
-  function validateStep(stepIndex){
+  function validateStep(stepIndex) {
     const f = State.state.flow;
-    const req = steps[stepIndex-1]?.required || [];
+    const req = steps[stepIndex - 1]?.required || [];
     for (const k of req) {
-      if (!f[k]) return { ok:false, reason:`Please fill ${k}.` };
+      if (!f[k]) {
+        const nice = { eventType: "event type", pax: "guests", dateStart: "start date", dateEnd: "end date" }[k] || k;
+        return { ok: false, reason: `Please enter ${nice}.` };
+      }
     }
     if (stepIndex === 4) {
       if (f.dateStart && f.dateEnd && new Date(f.dateEnd) < new Date(f.dateStart)) {
-        return { ok:false, reason:"End date must be on/after start date." };
+        return { ok: false, reason: "End date must be on/after start date." };
       }
     }
-    return { ok:true };
+    return { ok: true };
   }
 
-  function renderStepper(){
+  function renderStepper() {
     if (!els.stepLabel) return;
     const s = State.state.flow.step;
 
-    els.stepLabel.textContent = `Step ${s}/5 — ${steps[s-1].label}`;
+    els.stepLabel.textContent = `Step ${s}/5 — ${steps[s - 1].label}`;
 
     if (els.stepDots) {
-      els.stepDots.innerHTML = steps.map((_,i) => {
-        const on = (i+1) === s;
-        return `<span class="dot ${on ? "on":""}"></span>`;
-      }).join("");
+      els.stepDots.innerHTML = steps
+        .map((_, i) => {
+          const on = (i + 1) === s;
+          return `<span class="dot ${on ? "on" : ""}"></span>`;
+        })
+        .join("");
     }
 
     if (els.stepBack) els.stepBack.disabled = s <= 1;
-    if (els.stepNext) els.stepNext.textContent = (s >= 5) ? "See results" : "Next";
+    if (els.stepNext) els.stepNext.textContent = s >= 5 ? "See results" : "Next";
   }
 
-  function bindStepper(){
+  function bindStepper() {
     els.stepBack?.addEventListener("click", () => {
       const s = State.state.flow.step;
-      State.setStep(Math.max(1, s-1));
+      State.setStep(Math.max(1, s - 1));
       renderStepper();
-      apply();
     });
 
     els.stepNext?.addEventListener("click", () => {
@@ -155,18 +191,23 @@
       if (!v.ok) return alert(v.reason);
 
       if (s >= 5) {
-        // Jump to results section (if exists)
-        document.getElementById("resultsAnchor")?.scrollIntoView({ behavior:"smooth" });
+        document.getElementById("resultsAnchor")?.scrollIntoView({ behavior: "smooth" });
         apply();
         return;
       }
-      State.setStep(Math.min(5, s+1));
+      State.setStep(Math.min(5, s + 1));
       renderStepper();
-      apply();
     });
+
+    // Hide stepper in customer mode (if it exists)
+    if (CUSTOMER_MODE && els.stepLabel) {
+      // Try to hide the whole stepper bar container if your HTML matches
+      const bar = els.stepLabel.closest(".stepper-bar");
+      if (bar) bar.style.display = "none";
+    }
   }
 
-  // --- Geo button
+  // --- Geo button (manual trigger still exists)
   els.geoBtn?.addEventListener("click", async () => {
     try {
       els.geoStatus && (els.geoStatus.textContent = "Location: requesting…");
@@ -179,9 +220,67 @@
     }
   });
 
+  // --- Filters modal wiring (if present)
+  function bindFiltersModal() {
+    if (!els.filtersModal) return;
+
+    const show = () => els.filtersModal.classList.remove("hidden");
+    const hide = () => els.filtersModal.classList.add("hidden");
+
+    els.filtersBtn?.addEventListener("click", show);
+    els.filtersClose?.addEventListener("click", hide);
+
+    els.filtersModal?.addEventListener("click", (e) => {
+      if (e.target === els.filtersModal) hide();
+    });
+
+    els.applyFilters?.addEventListener("click", () => {
+      // Save current UI values into state (since we stopped auto-apply)
+      hydrateUIIntoState();
+      hide();
+      apply();
+    });
+
+    els.clearFilters?.addEventListener("click", () => {
+      // Clear UI values
+      ["budgetMin", "budgetMax", "reviewsMin", "maxKm"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+      const rating = document.getElementById("ratingMin");
+      if (rating) rating.value = "0";
+      const sort = document.getElementById("sortBy");
+      if (sort) sort.value = "best";
+
+      // Clear amenity set
+      State.state.flow.amenitySelected = new Set();
+      renderAmenityChips();
+
+      hydrateUIIntoState();
+      hide();
+      apply();
+    });
+  }
+
+  // When using explicit apply, we need to read current input values into State
+  function hydrateUIIntoState() {
+    const f = State.state.flow;
+    if (els.eventType) f.eventType = els.eventType.value || "";
+    if (els.pax) f.pax = els.pax.value || "";
+    if (els.budgetMin) f.budgetMin = els.budgetMin.value || "";
+    if (els.budgetMax) f.budgetMax = els.budgetMax.value || "";
+    if (els.dateStart) f.dateStart = els.dateStart.value || "";
+    if (els.dateEnd) f.dateEnd = els.dateEnd.value || "";
+    if (els.locationText) f.locationText = els.locationText.value || "";
+    if (els.ratingMin) f.ratingMin = els.ratingMin.value || "0";
+    if (els.reviewsMin) f.reviewsMin = els.reviewsMin.value || "";
+    if (els.maxKm) f.maxKm = els.maxKm.value || "";
+    if (els.sortBy) f.sortBy = els.sortBy.value || "best";
+    State.persist();
+  }
+
   // --- Modal helpers (optional)
-  function openInquiryModal(defaultVenueIds){
-    // If you don't have a modal in HTML, we fallback to simple prompts.
+  function openInquiryModal(defaultVenueIds) {
     if (!els.inquiryModal || !els.inquiryForm) {
       return promptInquiryFallback(defaultVenueIds);
     }
@@ -189,7 +288,7 @@
     els.inquiryModal.dataset.venueids = defaultVenueIds.join(",");
   }
 
-  function closeInquiryModal(){
+  function closeInquiryModal() {
     els.inquiryModal?.classList.add("hidden");
     if (els.inquiryModal) delete els.inquiryModal.dataset.venueids;
     els.inquiryForm?.reset();
@@ -200,7 +299,7 @@
     if (e.target === els.inquiryModal) closeInquiryModal();
   });
 
-  async function promptInquiryFallback(venueIds){
+  async function promptInquiryFallback(venueIds) {
     const f = State.state.flow;
     const customerName = prompt("Your name?");
     if (!customerName) return;
@@ -246,41 +345,38 @@
         notes: fd.get("notes") || ""
       });
 
-      alert(`Inquiry sent!`);
+      alert("Inquiry sent!");
       closeInquiryModal();
     } catch (err) {
       alert(err.message || "Failed to send inquiry.");
     }
   });
 
-  // --- Details modal: simplest approach is a redirect to a "venue.html?id=..."
-  // If you already have a modal UI, swap this handler.
-  function onDetails(v){
-    // For MVP: open a lightweight details prompt and allow inquiry to this venue
-    const flow = State.state.flow;
-    const conf = v.confidence.toUpperCase();
+  // --- Details handler
+  function onDetails(v) {
+    const conf = (v.confidence || "unverified").toUpperCase();
     const msg =
       `${v.name}\n${v.area}\n` +
-      `Capacity: ${v.paxMin}-${v.paxMax}\n` +
+      `Guests: ${v.paxMin}-${v.paxMax}\n` +
       `Price: ${UI.priceText(v)}\n` +
-      `Rating: ${Number(v.rating||0).toFixed(1)} (${v.reviewCount||0})\n` +
-      `Confidence: ${conf}\n` +
+      `Rating: ${Number(v.rating || 0).toFixed(1)} (${v.reviewCount || 0})\n` +
+      `Availability: ${conf}\n` +
       `Last updated: ${UI.lastUpdatedText(v.availability_last_sync || v.profile_last_updated)}\n\n` +
-      `Inquiry to this venue now?`;
+      `Send an inquiry to this venue now?`;
     if (confirm(msg)) openInquiryModal([v.id]);
   }
 
-  function onCompareChange(){ apply(); }
-  function onShortlistChange(){ apply(); }
+  function onCompareChange() { apply(); }
+  function onShortlistChange() { apply(); }
 
   // --- Sticky actions
-  async function onCompare(){
+  async function onCompare() {
     const ids = Array.from(State.state.compare);
     if (ids.length < 2) return;
     window.location.href = `compare.html?ids=${encodeURIComponent(ids.join(","))}`;
   }
 
-  async function onShareShortlist(){
+  async function onShareShortlist() {
     try {
       const token = await Pages.createShareableShortlistFromLocal();
       const shareUrl = `${location.origin}${location.pathname.replace(/[^/]+$/, "")}shortlist.html?token=${token}`;
@@ -291,15 +387,18 @@
     }
   }
 
-  async function onInquiry(){
+  async function onInquiry() {
     const ids = Array.from(State.state.shortlist).slice(0, APP_CONFIG.MAX_MULTI_INQUIRY);
     if (!ids.length) return alert("No saved venues.");
     openInquiryModal(ids);
   }
 
   // --- Core apply/render
-  async function apply(){
+  async function apply() {
     if (!els.resultsList) return;
+
+    // Ensure state reflects current UI (important since we stopped auto-apply)
+    hydrateUIIntoState();
 
     // Filter/sort
     const rows = Pages.getFilteredVenues();
@@ -313,7 +412,6 @@
       await Pages.refreshBlocksForCurrentRange(ids);
     } catch (e) {
       console.warn("Blocks fetch failed:", e);
-      // still render without availability overlays
       State.state.blocksByVenue = new Map();
     }
 
@@ -322,7 +420,7 @@
     const show = rows2.slice(0, 80);
 
     els.resultsList.innerHTML = "";
-    els.resultMeta && (els.resultMeta.textContent = `${rows2.length} venue(s)`);
+    if (els.resultMeta) els.resultMeta.textContent = `${rows2.length} venue(s)`;
 
     show.forEach(v => UI.renderVenueCard(v, els.resultsList, {
       onDetails,
@@ -348,14 +446,23 @@
     hydrateFromState();
     renderAmenityChips();
     bindInputs();
+    bindFiltersModal();
     bindStepper();
     renderStepper();
 
     if (els.geoStatus) els.geoStatus.textContent = State.state.userLoc ? "Location: set" : "Location: not set";
+    if (els.resultMeta) els.resultMeta.textContent = "Loading venues…";
 
     // Load backend data
-    els.resultMeta && (els.resultMeta.textContent = "Loading venues…");
     await Pages.loadAllVenueData();
+
+    // Optional: try to get geo automatically (Maps-like). Silent if denied.
+    if (CUSTOMER_MODE && !State.state.userLoc) {
+      try {
+        await Pages.ensureGeo();
+        if (els.geoStatus) els.geoStatus.textContent = "Location: set";
+      } catch { /* ignore */ }
+    }
 
     // First render
     await apply();
